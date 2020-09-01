@@ -1,5 +1,4 @@
 import * as mongoose from 'mongoose';
-import { movieFormat } from './movie.controller';
 const { Schema } = mongoose;
 
 const movieSchema = new Schema(
@@ -9,7 +8,7 @@ const movieSchema = new Schema(
         format: {
             type: String,
             required: true,
-            enum: [movieFormat[0], movieFormat[1], movieFormat[2]],
+            enum: ['VHS', 'DVD', 'Blu-Ray'],
         },
         cast: [{ type: String, required: true }],
     },
