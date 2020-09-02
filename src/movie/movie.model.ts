@@ -1,16 +1,17 @@
 import * as mongoose from 'mongoose';
+import { MovieRequest } from './movie.controller';
 const { Schema } = mongoose;
 
 const movieSchema = new Schema(
     {
-        name: { type: String, required: true },
-        year: { type: Number, required: true },
-        format: {
+        Title: { type: String, required: true },
+        ['Release Year']: { type: Number, required: true },
+        Format: {
             type: String,
             required: true,
             enum: ['VHS', 'DVD', 'Blu-Ray'],
         },
-        cast: [{ type: String, required: true }],
+        Stars: [{ type: String, required: true }],
     },
     {
         timestamps: true,
@@ -18,9 +19,14 @@ const movieSchema = new Schema(
 );
 
 movieSchema.statics.createMovie = createMovie;
+movieSchema.statics.createMovieMany = createMovieMany;
 
-function createMovie(name, year, format, cast) {
-    return this.create({ name, year, format, cast });
+function createMovie({ Title, ['Release Year']: year, Format, Stars }: MovieRequest) {
+    return this.create({ Title, ['Release Year']: year, Format, Stars });
+}
+
+function createMovieMany(arg: Array<MovieRequest>) {
+    return this.insertMany(arg);
 }
 
 // movies

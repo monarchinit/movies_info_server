@@ -1,5 +1,6 @@
 import * as express from 'express';
 import * as mongoose from 'mongoose';
+import * as cors from 'cors';
 import { movieRouter } from './movie/movie.router';
 
 export class MoviesServer {
@@ -22,6 +23,21 @@ export class MoviesServer {
     }
 
     initRoutes() {
+        var allowedOrigins = ['http://localhost:3000', 'http://yourapp.com'];
+        this.server.use(
+            cors({
+                origin: function (origin, callback) {
+                    // allow requests with no origin
+                    // (like mobile apps or curl requests)
+                    if (!origin) return callback(null, true);
+                    if (allowedOrigins.indexOf(origin) === -1) {
+                        var msg = 'The CORS policy for this site does not ' + 'allow access from the specified Origin.';
+                        return callback(new Error(msg), false);
+                    }
+                    return callback(null, true);
+                },
+            }),
+        );
         this.server.use('/movies', movieRouter);
         this.server.use((err, req, res, next) => {
             console.log(err);

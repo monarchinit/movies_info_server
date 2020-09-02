@@ -5,6 +5,7 @@ const router = Router();
 
 router.post('/', movieController.validateCreateFilm, movieController.createMovie);
 router.get('/', movieController.getMovies);
-router.delete('/', movieController.validateDeleteMovie, movieController.deleteMovie);
+router.get('/:movieId', movieController.getMovie);
+router.delete('/:movieId', movieController.deleteMovie);
 
 export const movieRouter = router;
