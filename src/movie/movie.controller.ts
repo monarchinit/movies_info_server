@@ -10,20 +10,20 @@ export enum movieFormat {
 }
 export interface MovieResponse {
     _id: string;
-    Title: string;
-    ['Release Year']: number;
-    Format: movieFormat;
-    Stars: string[];
+    title: string;
+    year: number;
+    format: movieFormat;
+    stars: string[];
     createdAt: Date;
     updatedAt: Date;
     __v: number;
 }
 
 export interface MovieRequest {
-    Title: string;
-    ['Release Year']: number;
-    Format: movieFormat;
-    Stars: string[];
+    title: string;
+    year: number;
+    format: movieFormat;
+    stars: string[];
 }
 
 export type MovieRequestMix = MovieRequest & Array<MovieRequest>;
@@ -38,12 +38,12 @@ class FilmController {
                 const movie: MovieResponse & MovieResponse[] = await movieModel.createMovieMany(body);
                 return res.status(201).json({ result: true, movie: getMoviePreview(movie) });
             } else {
-                const { Title, Format, Stars } = body;
+                const { title, format, stars, year } = body;
                 const movie: MovieResponse & MovieResponse[] = await movieModel.createMovie({
-                    Title,
-                    ['Release Year']: body['Release Year'],
-                    Format,
-                    Stars,
+                    title,
+                    year,
+                    format,
+                    stars,
                 });
                 return res.status(201).json({ result: true, movie: getMoviePreview(movie) });
             }
@@ -58,12 +58,12 @@ class FilmController {
             return res.status(200).json({
                 result: true,
                 movies: movies.map(
-                    ({ _id, Title, ['Release Year']: year, Format, Stars, createdAt }): MoviePreview => ({
+                    ({ _id, title, year, format, stars, createdAt }): MoviePreview => ({
                         _id,
-                        Title,
-                        ['Release Year']: year,
-                        Format,
-                        Stars,
+                        title,
+                        year,
+                        format,
+                        stars,
                         createdAt,
                     }),
                 ),
@@ -82,7 +82,7 @@ class FilmController {
                 return res.status(404).json({ result: false, message: `Movie with id ${movieId} was not found` });
             }
 
-            return res.status(200).json(movie);
+            return res.status(200).json({ result: true, movie });
         } catch (err) {
             next(err);
         }
@@ -103,17 +103,17 @@ class FilmController {
 
     public validateCreateFilm(req, _, next): void {
         const createFilmRules = Joi.object({
-            Title: Joi.string().required(),
-            ['Release Year']: Joi.number().required(),
-            Format: Joi.string().required(),
-            Stars: Joi.array().items(Joi.string()),
+            title: Joi.string().required(),
+            year: Joi.number().required(),
+            format: Joi.string().required(),
+            stars: Joi.array().items(Joi.string()),
         });
         const createManyFilmRules = Joi.array().items(
             Joi.object({
-                Title: Joi.string().required(),
-                ['Release Year']: Joi.number().required(),
-                Format: Joi.string().required(),
-                Stars: Joi.array().items(Joi.string()),
+                title: Joi.string().required(),
+                year: Joi.number().required(),
+                format: Joi.string().required(),
+                stars: Joi.array().items(Joi.string()),
             }),
         );
         const body: MovieRequestMix = req.body;

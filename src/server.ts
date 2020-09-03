@@ -20,6 +20,7 @@ export class MoviesServer {
 
     initMiddleware() {
         this.server.use(express.json());
+        this.server.use(express.static('/tmp/movies'));
     }
 
     initRoutes() {

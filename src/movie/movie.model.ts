@@ -4,14 +4,14 @@ const { Schema } = mongoose;
 
 const movieSchema = new Schema(
     {
-        Title: { type: String, required: true },
-        ['Release Year']: { type: Number, required: true },
-        Format: {
+        title: { type: String, required: true },
+        year: { type: Number, required: true },
+        format: {
             type: String,
             required: true,
             enum: ['VHS', 'DVD', 'Blu-Ray'],
         },
-        Stars: [{ type: String, required: true }],
+        stars: [{ type: String, required: true }],
     },
     {
         timestamps: true,
@@ -21,8 +21,8 @@ const movieSchema = new Schema(
 movieSchema.statics.createMovie = createMovie;
 movieSchema.statics.createMovieMany = createMovieMany;
 
-function createMovie({ Title, ['Release Year']: year, Format, Stars }: MovieRequest) {
-    return this.create({ Title, ['Release Year']: year, Format, Stars });
+function createMovie({ title, year, format, stars }: MovieRequest) {
+    return this.create({ title, year, format, stars });
 }
 
 function createMovieMany(arg: Array<MovieRequest>) {
